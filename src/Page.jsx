@@ -201,7 +201,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         maxPage = 1;
       }
     } else {
-      // updatePage(10);
+      updatePage(0);
     }
 
     updateMaxPage(maxPage);
@@ -218,7 +218,9 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
     }
   }, []);
 
-  const submit = () => {
+  const submit = (e) => {
+    e.preventDefault();
+
     if (
       true ||
       (sect &&
@@ -1187,7 +1189,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
                   maxLength={144}
                   placeholder="Имя"
                   onChange={(e) => handleUpdateState("name", e.target.value)}
-                  className="w-full font-normal h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                  className="w-full h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
                 />
               </label>
 
@@ -1201,7 +1203,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
                   maxLength={144}
                   placeholder="mail@example.com"
                   onChange={(e) => handleUpdateState("email", e.target.value)}
-                  className="w-full font-normal h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                  className="w-full h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
                 />
               </label>
 
@@ -1215,14 +1217,14 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
                   maxLength={64}
                   placeholder="Введите телефон"
                   onChange={(e) => handleUpdateState("phone", e.target.value)}
-                  className="w-full font-normal h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                  className="w-full h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
                 />
               </label>
 
               {/* --- Submit --- */}
               <button
-                disabled={loader}
-                className="swiper-button-next flex items-center justify-center gap-2.5 w-full h-12 bg-primary px-8 text-white rounded-lg transition-colors duration-200 disabled:opacity-70 capitalize"
+                disabled={loader || !name || !email || !phone}
+                className="flex items-center justify-center gap-2.5 w-full h-12 bg-primary px-8 text-white rounded-lg transition-colors duration-200 disabled:opacity-70 capitalize"
               >
                 {loader ? "отправить..." : "отправить"}
               </button>
