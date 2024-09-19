@@ -30,6 +30,7 @@ const App = () => {
                 <div className="h-full overflow-y-auto scroll-hidden pb-12">
                   <Page
                     page={page}
+                    maxPage={maxPage}
                     updatePage={(number) => setPage(number)}
                     updateMaxPage={(number) => setMaxPage(number)}
                   />

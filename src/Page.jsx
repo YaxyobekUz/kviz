@@ -15,7 +15,7 @@ import Option from "./components/Option";
 import AnimationPage from "./components/AnimationPage";
 
 const initialState = {
-  age: 18,
+  age: 25,
   height: 15,
   weight: 45,
   sect: null,
@@ -46,7 +46,7 @@ const initialState = {
   instagram: "https://instagram.com/",
 };
 
-const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
+const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
   // --- States ---
   const navigate = useNavigate();
   const [formState, setFormState] = useState(initialState);
@@ -99,6 +99,12 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         : [...prevState.character, value],
     }));
   }, []);
+
+  const updateCurrentPage = (pageNum = 1) => {
+    setTimeout(() => {
+      updatePage(pageNum);
+    }, 300);
+  }
 
   // --- Update max pages ---
   useEffect(() => {
@@ -207,6 +213,24 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
     updateMaxPage(maxPage);
   }, [formState, updateMaxPage]);
 
+
+  // auto scroll
+  useEffect(() => {
+    const current = (number) => page === number;
+    if (current(0) && gender && country) {
+      updateCurrentPage(1)
+    } else if (current(1) && region) {
+      updateCurrentPage(2)
+    } else if (current(3) && nation && prayer && (soqol || hijab)) {
+      updateCurrentPage(4)
+    } else if (current(4) && quran && sect && maritalStatus) {
+      updateCurrentPage(5)
+    } else if (current(5) && childrenSCount && migration) {
+      updateCurrentPage(6)
+    }
+  }, [formState])
+
+
   // --- Swiper ---
   useEffect(() => {
     const swiper = document.querySelector(".mySwiper")?.swiper;
@@ -305,7 +329,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
       {currentSection(0) && (
         <AnimationPage>
           {/* section title */}
-          <h2>{page1.title}</h2>
+          <h2>Заполните анкету</h2>
 
           {/* section content */}
           <div className="space-y-8">
@@ -1189,7 +1213,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
                   maxLength={144}
                   placeholder="Имя"
                   onChange={(e) => handleUpdateState("name", e.target.value)}
-                  className="w-full h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                  className="w-full h-12 rounded-md px-4 mb-5 font-medium outline-none border border-secondary/30 focus:border-primary"
                 />
               </label>
 
@@ -1203,7 +1227,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
                   maxLength={144}
                   placeholder="mail@example.com"
                   onChange={(e) => handleUpdateState("email", e.target.value)}
-                  className="w-full h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                  className="w-full h-12 rounded-md px-4 mb-5 font-medium outline-none border border-secondary/30 focus:border-primary"
                 />
               </label>
 
@@ -1217,7 +1241,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
                   maxLength={64}
                   placeholder="Введите телефон"
                   onChange={(e) => handleUpdateState("phone", e.target.value)}
-                  className="w-full h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                  className="w-full h-12 rounded-md px-4 mb-5 font-medium outline-none border border-secondary/30 focus:border-primary"
                 />
               </label>
 
