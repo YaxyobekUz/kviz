@@ -219,7 +219,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       updateCurrentPage(1)
     } else if (current(1) && region) {
       updateCurrentPage(2)
-    } else if (current(3) && nation && prayer && (soqol || hijab)) {
+    } else if (current(3) && nation && prayer && ((isMale && soqol) || (!isMale && hijab))) {
       updateCurrentPage(4)
     } else if (current(4) && quran && sect && maritalStatus) {
       updateCurrentPage(5)
@@ -320,6 +320,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 
   return (
     <>
+      <h2>{hijab}</h2>
+
       {/* section 0 */}
       {currentSection(0) && (
         <AnimationPage>
