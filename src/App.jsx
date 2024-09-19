@@ -37,12 +37,15 @@ const App = () => {
                 </div>
               </main>
 
-              <Footer
-                page={page}
-                maxPage={maxPage}
-                totalPage={totalPage}
-                updatePage={(number) => setPage(number)}
-              />
+              {
+                page !== 10 &&
+                <Footer
+                  page={page}
+                  maxPage={maxPage}
+                  totalPage={totalPage}
+                  updatePage={(number) => setPage(number)}
+                />
+              }
             </div>
           }
         />

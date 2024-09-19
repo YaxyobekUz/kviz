@@ -12,7 +12,7 @@ export const page1 = {
           value: "Мужчина",
         },
         {
-          label: "Женщина",
+          label: "Я Женщина",
           value: "Женщина",
         },
       ],

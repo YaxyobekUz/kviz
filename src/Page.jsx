@@ -16,13 +16,12 @@ import AnimationPage from "./components/AnimationPage";
 
 const initialState = {
   age: 25,
-  height: 15,
-  weight: 45,
+  height: 170,
+  weight: 70,
   sect: null,
   file: null,
   name: null,
   hijab: null,
-  email: null,
   phone: null,
   soqol: null,
   quran: null,
@@ -37,13 +36,13 @@ const initialState = {
   age2: [18, 65],
   education: null,
   migration: null,
+  telegram: null,
+  instagram: null,
   maritalStatus: null,
   extraCharacter: null,
   childrenSCount: null,
   telephoneNumber: "+",
   aboutTheFutureWife: null,
-  telegram: "https://t.me/",
-  instagram: "https://instagram.com/",
 };
 
 const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
@@ -59,7 +58,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
     hijab,
     about,
     quran,
-    email,
     name,
     phone,
     gender,
@@ -251,7 +249,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
         name &&
         quran &&
         phone &&
-        email &&
         region &&
         nation &&
         prayer &&
@@ -284,8 +281,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 *Мазхаб:* ${sect}
 
 *Имя:* ${name}
-*Email:* ${email}
-*телефон:* ${phone}
 *Возраст:* ${age}
 *Страна:* ${country}
 *Город:* ${region}
@@ -295,15 +290,15 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 *Возраст будущего мужа/жены:* от ${age2[0]} до ${age2[1]}
 *Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
 
-*Рост:* ${height + 100} sm
+*Рост:* ${height} sm
 *Вес:* ${weight} kg
 *Образование:* ${education}
 *О себе:* ${about}
-*О будущей жене/муже:* ${aboutTheFutureWife}
+*О будущей ${isMale ? "муже" : "жене"}:* ${aboutTheFutureWife}
 
 *Номер в WhatsApp:* ${telephoneNumber}
-*Ссылка на Instagram:* ${instagram}
-*Ссылка на Telegram:* ${telegram}
+*Ссылка на Instagram:* ${instagram ? instagram : "Нет"}
+*Ссылка на Telegram:* ${telegram ? telegram : "Нет"}
 `;
 
       // form data
@@ -389,9 +384,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {currentSection(1) && (
         <AnimationPage>
           {/* section title */}
-          <h2>
-            {country}. {page2.title}
-          </h2>
+          <h2>{page2.title}</h2>
 
           {/* section content */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mb-5">
@@ -448,7 +441,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {currentSection(3) && (
         <AnimationPage>
           {/* section title */}
-          <h2>{gender} *</h2>
+          <h2>*</h2>
 
           {/* section content */}
           <div className="space-y-8">
@@ -517,6 +510,15 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
                 isActive={prayer === "Нет"}
                 onChange={(value) => handleUpdateState("prayer", value)}
               />
+
+              {/* other */}
+              <Option
+                inputField
+                value={prayer}
+                text="Другое..."
+                onChange={(value) => handleUpdateState("prayer", value)}
+                isActive={checkInputFieldOption(prayer, ["Да", "Нет",])}
+              />
             </div>
 
             {/* --- Soqol or Hijab --- */}
@@ -538,6 +540,15 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
                   isActive={soqol === "Нет"}
                   onChange={(value) => handleUpdateState("soqol", value)}
                 />
+
+                {/* other */}
+                <Option
+                  inputField
+                  value={soqol}
+                  text="Другое..."
+                  onChange={(value) => handleUpdateState("soqol", value)}
+                  isActive={checkInputFieldOption(soqol, ["Да", "Нет",])}
+                />
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mb-5">
@@ -554,6 +565,15 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
                   isActive={hijab === "Нет"}
                   onChange={(value) => handleUpdateState("hijab", value)}
                 />
+
+                {/* other */}
+                <Option
+                  inputField
+                  value={hijab}
+                  text="Другое..."
+                  onChange={(value) => handleUpdateState("hijab", value)}
+                  isActive={checkInputFieldOption(hijab, ["Да", "Нет",])}
+                />
               </div>
             )}
           </div>
@@ -564,7 +584,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {currentSection(4) && (
         <AnimationPage>
           {/* section title */}
-          <h2>{gender} **</h2>
+          <h2>**</h2>
 
           {/* section content */}
           <div className="space-y-8">
@@ -729,7 +749,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {currentSection(5) && (
         <AnimationPage>
           {/* section title */}
-          <h2>{gender} ***</h2>
+          <h2>***</h2>
 
           {/* section content */}
           <div className="space-y-8">
@@ -839,7 +859,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {currentSection(6) && (
         <AnimationPage>
           {/* section title */}
-          <h2>{gender} ****</h2>
+          <h2>****</h2>
 
           {/* section content */}
           <div className="space-y-8">
@@ -941,7 +961,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {currentSection(7) && (
         <AnimationPage>
           {/* section title */}
-          <h2>{gender} *****</h2>
+          <h2>*****</h2>
 
           {/* section content */}
           <div className="space-y-8">
@@ -960,15 +980,15 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               {/* slider wrapper */}
               <div className="space-y-3">
                 <Slider
-                  min={10}
-                  max={100}
+                  min={150}
+                  max={220}
                   value={height}
                   onChange={(e) => handleUpdateState("height", e.target.value)}
                 />
 
                 <div className="flex items-center justify-between px-1">
-                  <p className="text-sm opacity-50">10</p>
-                  <p className="text-sm opacity-50">100</p>
+                  <p className="text-sm opacity-50">150</p>
+                  <p className="text-sm opacity-50">120</p>
                 </div>
               </div>
             </div>
@@ -1076,9 +1096,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 8 */}
       {currentSection(8) && (
         <AnimationPage>
-          {/* section title */}
-          <h2>Номер в WhatsApp</h2>
-
           {/* section content */}
           <div className="space-y-8">
             {/* --- Height --- */}
@@ -1127,9 +1144,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 9 */}
       {currentSection(9) && (
         <AnimationPage>
-          {/* section title */}
-          <h2>Дополнительные известные</h2>
-
           {/* section content */}
           <div className="space-y-8">
             <div className="space-y-3">
@@ -1197,9 +1211,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 10 */}
       {currentSection(10) && (
         <AnimationPage>
-          {/* section title */}
-          <h2 className="text-center font-medium">Заполните форму, чтобы получить <br /> результаты теста</h2>
-
           {/* section content */}
           <div className="flex items-center justify-center">
             <form onSubmit={submit} className="max-w-xl w-full sm:p-10">
@@ -1213,20 +1224,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
                   maxLength={144}
                   placeholder="Имя"
                   onChange={(e) => handleUpdateState("name", e.target.value)}
-                  className="w-full h-12 rounded-md px-4 mb-5 font-medium outline-none border border-secondary/30 focus:border-primary"
-                />
-              </label>
-
-              <label className="flex flex-col gap-3.5">
-                <span className="font-medium">Введите email</span>
-
-                <input
-                  required
-                  type="email"
-                  value={email}
-                  maxLength={144}
-                  placeholder="mail@example.com"
-                  onChange={(e) => handleUpdateState("email", e.target.value)}
                   className="w-full h-12 rounded-md px-4 mb-5 font-medium outline-none border border-secondary/30 focus:border-primary"
                 />
               </label>
@@ -1247,7 +1244,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 
               {/* --- Submit --- */}
               <button
-                disabled={loader || !name || !email || !phone}
+                disabled={loader || !name || !phone}
                 className="flex items-center justify-center gap-2.5 w-full h-12 bg-primary px-8 text-white rounded-lg transition-colors duration-200 disabled:opacity-70 capitalize"
               >
                 {loader ? "отправить..." : "отправить"}
