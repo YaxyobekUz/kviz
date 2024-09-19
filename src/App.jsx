@@ -11,8 +11,8 @@ import Footer from "./components/Footer";
 
 const App = () => {
   const totalPage = 10;
-  const [page, setPage] = useState(1);
-  const [maxPage, setMaxPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const [maxPage, setMaxPage] = useState(0);
 
   return (
     <Router>
@@ -38,7 +38,7 @@ const App = () => {
 
               <Footer
                 page={page}
-                maxPage={maxPage}
+                maxPage={12}
                 totalPage={totalPage}
                 updatePage={(number) => setPage(number)}
               />

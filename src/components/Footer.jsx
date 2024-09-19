@@ -23,11 +23,11 @@ const Footer = ({ page = 1, updatePage = () => 1, totalPage, maxPage = 1 }) => {
         {/* prev */}
         <button
           onClick={() => {
-            if (page !== 1) {
+            if (page !== 0) {
               updatePage(page - 1);
             }
           }}
-          disabled={page === 1}
+          disabled={page === 0}
           className="swiper-button-prev flex items-center justify-center size-11 rounded-full border transition-colors duration-200 disabled:opacity-50"
         >
           <svg

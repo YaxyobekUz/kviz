@@ -19,7 +19,11 @@ const initialState = {
   height: 15,
   weight: 45,
   sect: null,
+  file: null,
+  name: null,
   hijab: null,
+  email: null,
+  phone: null,
   soqol: null,
   quran: null,
   about: null,
@@ -50,10 +54,14 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
     age,
     age2,
     sect,
+    file,
     soqol,
     hijab,
     about,
     quran,
+    email,
+    name,
+    phone,
     gender,
     region,
     nation,
@@ -94,11 +102,13 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
 
   // --- Update max pages ---
   useEffect(() => {
-    let maxPage = 1;
+    let maxPage = 0;
 
     if (gender && country) {
       if (
+        file &&
         sect &&
+        about &&
         quran &&
         region &&
         nation &&
@@ -108,6 +118,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         migration &&
         maritalStatus &&
         childrenSCount &&
+        aboutTheFutureWife &&
         telephoneNumber?.length > 1 &&
         (character?.length > 0 || extraCharacter) &&
         ((isMale && soqol) || (!isMale && hijab))
@@ -124,6 +135,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         migration &&
         maritalStatus &&
         childrenSCount &&
+        telephoneNumber?.length > 1 &&
         (character?.length > 0 || extraCharacter) &&
         ((isMale && soqol) || (!isMale && hijab))
       ) {
@@ -135,6 +147,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         nation &&
         prayer &&
         country &&
+        education &&
         migration &&
         maritalStatus &&
         childrenSCount &&
@@ -152,6 +165,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         migration &&
         maritalStatus &&
         childrenSCount &&
+        (character?.length > 0 || extraCharacter) &&
         ((isMale && soqol) || (!isMale && hijab))
       ) {
         maxPage = 7;
@@ -162,16 +176,29 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         nation &&
         prayer &&
         country &&
+        migration &&
         maritalStatus &&
+        childrenSCount &&
         ((isMale && soqol) || (!isMale && hijab))
       ) {
         maxPage = 6;
-      } else if ((isMale && soqol) || (!isMale && hijab)) {
+      } else if (
+        sect &&
+        quran &&
+        region &&
+        nation &&
+        prayer &&
+        country &&
+        maritalStatus &&
+        ((isMale && soqol) || (!isMale && hijab))
+      ) {
         maxPage = 5;
-      } else if (region) {
+      } else if (((isMale && soqol) || (!isMale && hijab)) && nation && prayer) {
         maxPage = 4;
+      } else if (region) {
+        maxPage = 3;
       } else {
-        maxPage = 2;
+        maxPage = 1;
       }
     } else {
       // updatePage(10);
@@ -195,7 +222,10 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
     if (
       true ||
       (sect &&
+        name &&
         quran &&
+        phone &&
+        email &&
         region &&
         nation &&
         prayer &&
@@ -220,29 +250,34 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
 
       // message
       const message = `
-*Выберите Ваш пол*: ${gender}
-*Выберите Вашу Страну:* ${country}
-*Выберите Ваш город:* ${region}
-*Сколько Вам лет?* ${age}
+*Пол:* ${gender}
 *Национальность:* ${nation}
 *Читаете ли Вы намаз?* ${prayer}
-*Носите ли вы хиджаб?* ${hijab}
+*${soqol ? "Носите ли вы бороду?" : "Носите ли вы хиджаб?"}:* ${soqol ? soqol : hijab}
 *Умеете ли вы читать К'уран?* ${quran}
-*Ваш Мазхаб?* ${sect}
+*Мазхаб:* ${sect}
+
+*Имя:* ${name}
+*Email:* ${email}
+*телефон:* ${phone}
+*Возраст:* ${age}
+*Страна:* ${country}
+*Город:* ${region}
 *Семейное положение:* ${maritalStatus}
 *Количество детей:* ${childrenSCount}
-*Готовы ли Вы к переезду?* ${migration}
-*Возраст будущего мужа/жены:* ${age2[0]} - ${age2[1]}
-*Ваш Характер:* ${character?.length > 0 && character.map((char) => char)}
-*Ваш Характер 2:* ${extraCharacter ? extraCharacter : ""}
-*Ваш Рост: (в сантиметрах):* ${height + 100} sm
-*Ваш Вес: (килограммах)* ${weight} kg
+*Готовы ли вы к переезду?* ${migration}
+*Возраст будущего мужа/жены:* от ${age2[0]} до ${age2[1]}
+*Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
+
+*Рост:* ${height + 100} sm
+*Вес:* ${weight} kg
 *Образование:* ${education}
+*О себе:* ${about}
+*О будущей жене/муже:* ${aboutTheFutureWife}
+
 *Номер в WhatsApp:* ${telephoneNumber}
 *Ссылка на Instagram:* ${instagram}
 *Ссылка на Telegram:* ${telegram}
-*О себе:* ${about}
-*О будущей супруге:* ${aboutTheFutureWife}
 `;
 
       // form data
@@ -264,8 +299,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
 
   return (
     <>
-      {/* section 1 */}
-      {currentSection(1) && (
+      {/* section 0 */}
+      {currentSection(0) && (
         <AnimationPage>
           {/* section title */}
           <h2>{page1.title}</h2>
@@ -324,8 +359,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 2 */}
-      {currentSection(2) && (
+      {/* section 1 */}
+      {currentSection(1) && (
         <AnimationPage>
           {/* section title */}
           <h2>
@@ -336,24 +371,24 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mb-5">
             {page2.countries[country]
               ? page2.countries[country].regions.map((regionData, index) => (
-                  <Option
-                    key={index}
-                    name="region"
-                    text={regionData}
-                    value={regionData}
-                    isActive={regionData === region}
-                    onChange={(value) =>
-                      handleUpdateState("region", regionData)
-                    }
-                  />
-                ))
+                <Option
+                  key={index}
+                  name="region"
+                  text={regionData}
+                  value={regionData}
+                  isActive={regionData === region}
+                  onChange={(value) =>
+                    handleUpdateState("region", regionData)
+                  }
+                />
+              ))
               : "Something went wrong :("}
           </div>
         </AnimationPage>
       )}
 
-      {/* section 3 */}
-      {currentSection(3) && (
+      {/* section 2 */}
+      {currentSection(2) && (
         <AnimationPage>
           {/* section title */}
           <h2>Сколько Вам лет?</h2>
@@ -383,8 +418,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 4 */}
-      {currentSection(4) && (
+      {/* section 3 */}
+      {currentSection(3) && (
         <AnimationPage>
           {/* section title */}
           <h2>{gender} *</h2>
@@ -499,8 +534,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 5 */}
-      {currentSection(5) && (
+      {/* section 4 */}
+      {currentSection(4) && (
         <AnimationPage>
           {/* section title */}
           <h2>{gender} **</h2>
@@ -664,8 +699,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 6 */}
-      {currentSection(6) && (
+      {/* section 5 */}
+      {currentSection(5) && (
         <AnimationPage>
           {/* section title */}
           <h2>{gender} ***</h2>
@@ -774,8 +809,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 7 */}
-      {currentSection(7) && (
+      {/* section 6 */}
+      {currentSection(6) && (
         <AnimationPage>
           {/* section title */}
           <h2>{gender} ****</h2>
@@ -876,8 +911,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 8 */}
-      {currentSection(8) && (
+      {/* section 7 */}
+      {currentSection(7) && (
         <AnimationPage>
           {/* section title */}
           <h2>{gender} *****</h2>
@@ -1012,8 +1047,8 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 9 */}
-      {currentSection(9) && (
+      {/* section 8 */}
+      {currentSection(8) && (
         <AnimationPage>
           {/* section title */}
           <h2>Номер в WhatsApp</h2>
@@ -1063,16 +1098,14 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
         </AnimationPage>
       )}
 
-      {/* section 10 */}
-      {currentSection(10) && (
+      {/* section 9 */}
+      {currentSection(9) && (
         <AnimationPage>
           {/* section title */}
           <h2>Дополнительные известные</h2>
 
           {/* section content */}
           <div className="space-y-8">
-            {/* --- Height --- */}
-
             <div className="space-y-3">
               <h3>О себе:</h3>
 
@@ -1099,14 +1132,101 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1 }) => {
               />
             </div>
 
-            {/* --- Submit --- */}
-            <button
-              onClick={submit}
-              disabled={loader || !about || !aboutTheFutureWife}
-              className="swiper-button-next flex items-center justify-center gap-2.5 h-11 bg-primary px-8 text-lg text-white rounded-full transition-colors duration-200 disabled:opacity-70 capitalize"
-            >
-              {loader ? "отправить..." : "отправить"}
-            </button>
+            <div className="space-y-3">
+              <h3 className="text-center">Загрузите ваше фото (это не будет показываться другим пользователям и нужно только для проверки что вы реальный человек)</h3>
+
+              <label className="flex flex-col items-center justify-center gap-3.5 w-full py-10 bg-transparent border border-secondary/35 border-dashed rounded-lg transition-colors duration-200 hover:border-primary hover:bg-primary/15 cursor-pointer">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.5535 2.49392C12.4114 2.33852 12.2106 2.25 12 2.25C11.7894 2.25 11.5886 2.33852 11.4465 2.49392L7.44648 6.86892C7.16698 7.17462 7.18822 7.64902 7.49392 7.92852C7.79963 8.20802 8.27402 8.18678 8.55352 7.88108L11.25 4.9318V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V4.9318L15.4465 7.88108C15.726 8.18678 16.2004 8.20802 16.5061 7.92852C16.8118 7.64902 16.833 7.17462 16.5535 6.86892L12.5535 2.49392Z" fill="#d34085" />
+                  <path d="M3.75 15C3.75 14.5858 3.41422 14.25 3 14.25C2.58579 14.25 2.25 14.5858 2.25 15V15.0549C2.24998 16.4225 2.24996 17.5248 2.36652 18.3918C2.48754 19.2919 2.74643 20.0497 3.34835 20.6516C3.95027 21.2536 4.70814 21.5125 5.60825 21.6335C6.47522 21.75 7.57754 21.75 8.94513 21.75H15.0549C16.4225 21.75 17.5248 21.75 18.3918 21.6335C19.2919 21.5125 20.0497 21.2536 20.6517 20.6516C21.2536 20.0497 21.5125 19.2919 21.6335 18.3918C21.75 17.5248 21.75 16.4225 21.75 15.0549V15C21.75 14.5858 21.4142 14.25 21 14.25C20.5858 14.25 20.25 14.5858 20.25 15C20.25 16.4354 20.2484 17.4365 20.1469 18.1919C20.0482 18.9257 19.8678 19.3142 19.591 19.591C19.3142 19.8678 18.9257 20.0482 18.1919 20.1469C17.4365 20.2484 16.4354 20.25 15 20.25H9C7.56459 20.25 6.56347 20.2484 5.80812 20.1469C5.07435 20.0482 4.68577 19.8678 4.40901 19.591C4.13225 19.3142 3.9518 18.9257 3.85315 18.1919C3.75159 17.4365 3.75 16.4354 3.75 15Z" fill="#d34085" />
+                </svg>
+
+                <div className="font-semibold">Нажмите, чтобы загрузить файл</div>
+                <div className="text-sm">Или перетяните его из папки в это поле</div>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleUpdateState("file", e.target.files[0])}
+                />
+              </label>
+
+              {
+                file &&
+                <button
+                  onClick={() => handleUpdateState("file", null)}
+                  className="px-3.5 py-1 border border-secondary/25 rounded-lg text-sm transition-colors duration-200 hover:bg-primary/15"
+                >
+                  {file.name}
+                </button>
+              }
+            </div>
+
+
+          </div>
+        </AnimationPage>
+      )}
+
+      {/* section 10 */}
+      {currentSection(10) && (
+        <AnimationPage>
+          {/* section title */}
+          <h2 className="text-center font-medium">Заполните форму, чтобы получить <br /> результаты теста</h2>
+
+          {/* section content */}
+          <div className="flex items-center justify-center">
+            <form onSubmit={submit} className="max-w-xl w-full sm:p-10">
+              <label className="flex flex-col gap-3.5">
+                <span className="font-medium">Введите имя</span>
+
+                <input
+                  required
+                  type="text"
+                  value={name}
+                  maxLength={144}
+                  placeholder="Имя"
+                  onChange={(e) => handleUpdateState("name", e.target.value)}
+                  className="w-full font-normal h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                />
+              </label>
+
+              <label className="flex flex-col gap-3.5">
+                <span className="font-medium">Введите email</span>
+
+                <input
+                  required
+                  type="email"
+                  value={email}
+                  maxLength={144}
+                  placeholder="mail@example.com"
+                  onChange={(e) => handleUpdateState("email", e.target.value)}
+                  className="w-full font-normal h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                />
+              </label>
+
+              <label className="flex flex-col gap-3.5">
+                <span className="font-medium">Введите телефон</span>
+
+                <input
+                  required
+                  type="tel"
+                  value={phone}
+                  maxLength={64}
+                  placeholder="Введите телефон"
+                  onChange={(e) => handleUpdateState("phone", e.target.value)}
+                  className="w-full font-normal h-12 rounded-md px-4 mb-5 outline-none border border-secondary/30 focus:border-primary"
+                />
+              </label>
+
+              {/* --- Submit --- */}
+              <button
+                disabled={loader}
+                className="swiper-button-next flex items-center justify-center gap-2.5 w-full h-12 bg-primary px-8 text-white rounded-lg transition-colors duration-200 disabled:opacity-70 capitalize"
+              >
+                {loader ? "отправить..." : "отправить"}
+              </button>
+            </form>
           </div>
         </AnimationPage>
       )}
