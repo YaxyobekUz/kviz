@@ -38,7 +38,7 @@ const App = () => {
 
               <Footer
                 page={page}
-                maxPage={12}
+                maxPage={maxPage}
                 totalPage={totalPage}
                 updatePage={(number) => setPage(number)}
               />
