@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-base font-medium font-gilroy text-secondary;
+  }
+
+  h2 {
+    @apply text-[32px] leading-9 font-semibold mb-8;
+  }
+
+  h3 {
+    @apply text-[22px] leading-6 mb-6;
+  }
+
+  label {
+    @apply font-normal;
+  }
+}
+
+@layer components {
+  .scroll-hidden::-webkit-scrollbar {
+    @apply !hidden !w-0 !h-0;
+  }
+
+  .custom-option {
+    @apply flex items-center gap-4 pl-4 border border-gray-300 rounded-md cursor-pointer transition-colors;
+    height: 50px;
+  }
+
+  .custom-option input[type="text"] {
+    @apply size-full bg-gray-50 rounded-r-md px-2.5 focus:outline-none;
+  }
+
+  .virtual-radio,
+  .virtual-checkbox {
+    @apply w-5 h-5 shrink-0 bg-gray-200 border border-gray-200 rounded-full;
+    transition-property: box-shadow, border, background-color;
+    transition-duration: 150ms;
+  }
+
+  .virtual-checkbox {
+    @apply flex items-center justify-center rounded;
+  }
+
+  .virtual-checkbox .checkbox-checkmark {
+    @apply text-transparent;
+  }
+
+  /* active */
+  .custom-option.active .virtual-radio {
+    @apply bg-primary border-2 border-primary;
+    box-shadow: inset 0px 0px 0px 3px #fff;
+  }
+
+  .custom-option.active .virtual-checkbox {
+    @apply bg-primary border-primary;
+  }
+
+  .custom-option.active .virtual-checkbox .checkbox-checkmark {
+    @apply text-white;
+  }
+
+  .custom-option.active {
+    @apply border-primary;
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply max-w-[880px] w-full mx-auto px-5;
+  }
+}
+
+.external-pagination {
+  height: 6px !important;
+  overflow: hidden !important;
+  border-radius: 8px !important;
+}
+
+.external-pagination .swiper-pagination-progressbar-fill {
+  height: 6px !important;
+  background: #d34085 !important;
+}
