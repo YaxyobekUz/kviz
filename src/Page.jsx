@@ -294,7 +294,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 *Вес:* ${weight} kg
 *Образование:* ${education}
 *О себе:* ${about}
-*О будущей ${isMale ? "муже" : "жене"}:* ${aboutTheFutureWife}
+*О будущей ${isMale ? "жене" : "муже"}:* ${aboutTheFutureWife}
 
 *Номер в WhatsApp:* ${telephoneNumber}
 *Ссылка на Instagram:* ${instagram ? instagram : "Нет"}
