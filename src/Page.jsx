@@ -234,12 +234,62 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       current(3) &&
       nation &&
       prayer &&
-      ((isMale && soqol) || (!isMale && hijab))
+      [
+        "Казах",
+        "Узбек",
+        "Киргиз",
+        "Русский",
+        "Казашка",
+        "Узбечка",
+        "Русская",
+        "Киргизка",
+      ].includes(nation) &&
+      ["Да", "Нет"].includes(prayer) &&
+      ((isMale && soqol && ["Да", "Нет"].includes(soqol)) ||
+        (!isMale && hijab && ["Да", "Нет"].includes(hijab)))
     ) {
       updateCurrentPage(4);
-    } else if (current(4) && quran && sect && maritalStatus) {
+    } else if (
+      current(4) &&
+      quran &&
+      sect &&
+      maritalStatus &&
+      ["Абу Ханифа"].includes(sect) &&
+      ["Да", "Нет"].includes(quran) &&
+      [
+        "Вдова",
+        "Холост",
+        "Вдовец",
+        "Разведен",
+        "Разведена",
+        "Не замужем",
+        "Ищу 2-ую жену",
+        "Ищу 3-ую жену",
+        "Ищу 4-ую жену",
+        "Не была замужем",
+        "Ищу мужу 2-ую жену",
+        "Ищу мужу 3-ую жену",
+        "Ищу мужу 4-ую жену",
+        "Не женат (Не был женат)",
+      ].includes(maritalStatus)
+    ) {
       updateCurrentPage(5);
-    } else if (current(5) && childrenSCount && migration) {
+    } else if (
+      migration &&
+      current(5) &&
+      childrenSCount &&
+      ["Да", "Нет"].includes(migration) &&
+      [
+        "1",
+        "2",
+        "3",
+        "Детей нет",
+        "Живут с Мамой",
+        "Живут с отцом",
+        "Живут отдельно",
+        "Не живут со мной",
+      ].includes(childrenSCount)
+    ) {
       updateCurrentPage(6);
     }
   }, [formState]);
@@ -257,9 +307,9 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 
   const submit = async (e) => {
     e.preventDefault();
-  
+
     if (
-      true || 
+      true ||
       (sect &&
         name &&
         quran &&
@@ -279,18 +329,20 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
     ) {
       // add loader
       handleUpdateState("loader", true);
-  
+
       // helpers
       const token = "7096252874:AAFwuN5TLWTOvyGXdE6gKQ_KRkBKDnnCOjA";
       const baseUrl = "https://api.telegram.org/bot" + token + "/";
       const chatId = "-1002297889113";
-  
+
       // message
       const message = `
 *Пол:* ${gender}
 *Национальность:* ${nation}
 *Читаете ли Вы намаз?* ${prayer}
-*${soqol ? "Носите ли вы бороду?" : "Носите ли вы хиджаб?"}:* ${soqol ? soqol : hijab}
+*${soqol ? "Носите ли вы бороду?" : "Носите ли вы хиджаб?"}:* ${
+        soqol ? soqol : hijab
+      }
 *Умеете ли вы читать К'уран?* ${quran}
 *Мазхаб:* ${sect}
 
@@ -302,7 +354,9 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 *Количество детей:* ${childrenSCount}
 *Готовы ли вы к переезду?* ${migration}
 *Возраст будущего ${isMale ? "жены" : "мужа"}:* от ${age2[0]} до ${age2[1]}
-*Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
+*Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${
+        extraCharacter ? extraCharacter : ""
+      }
 
 *Рост:* ${height} см
 *Вес:* ${weight} кг
@@ -310,22 +364,26 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 *О себе:* ${about}
 *О будущей ${isMale ? "жене" : "муже"}:* ${aboutTheFutureWife}
 
-*Номер в WhatsApp:* ${"https://wa.me/" + telephoneNumber}
-*Ссылка на Instagram:* ${instagram ? "https://instagram.com/" + instagram : "Нет"}
-*Ссылка на Telegram:* ${telegram ? "@" + telegram : "Нет"}
+*Номер в WhatsApp:* [${telephoneNumber}](https://api.whatsapp.com/send?phone=${telephoneNumber}&text=NikahCompany)
+*Ссылка на Instagram:* ${
+        instagram ? `[${instagram}](https://instagram.com/${instagram})` : "Нет"
+      }
+*Ссылка на Telegram:* ${
+        telegram ? `[${telegram}](https://t.me/${telegram})` : "Нет"
+      }
   `;
-  
+
       if (file) {
         // If a file is selected, send the photo
         const photoUrl = `${baseUrl}sendPhoto`;
-  
+
         // Create FormData
         const formData = new FormData();
         formData.append("chat_id", chatId);
-        formData.append("caption", message);  // Add message as caption
+        formData.append("caption", message); // Add message as caption
         formData.append("parse_mode", "Markdown");
-        formData.append("photo", file);  // Attach the selected file
-  
+        formData.append("photo", file); // Attach the selected file
+
         // Send request with photo
         try {
           await axios.post(photoUrl, formData, {
@@ -348,7 +406,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
           parse_mode: "Markdown",
           disable_web_page_preview: true,
         };
-  
+
         // Send request without photo
         try {
           await axios.post(messageUrl, messageData);
@@ -361,7 +419,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       }
     }
   };
-  
 
   return (
     <>
