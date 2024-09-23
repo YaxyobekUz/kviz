@@ -301,7 +301,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
   *Семейное положение:* ${maritalStatus}
   *Количество детей:* ${childrenSCount}
   *Готовы ли вы к переезду?* ${migration}
-  *Возраст будущего ${isMale ? "мужа" : "жены"}:* от ${age2[0]} до ${age2[1]}
+  *Возраст будущего ${isMale ? "жены" : "мужа"}:* от ${age2[0]} до ${age2[1]}
   *Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
   
   *Рост:* ${height} см
