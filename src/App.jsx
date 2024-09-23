@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // pages
@@ -11,8 +11,15 @@ import Footer from "./components/Footer";
 
 const App = () => {
   const totalPage = 10;
+  const pageRef = useRef();
   const [page, setPage] = useState(0);
   const [maxPage, setMaxPage] = useState(0);
+
+  useEffect(() => {
+    if (pageRef) {
+      pageRef.current.scrollTo(0, 0);
+    }
+  }, [page]);
 
   return (
     <Router>
@@ -27,7 +34,10 @@ const App = () => {
 
               {/* main */}
               <main className="container h-[calc(100%-176px)] py-4">
-                <div className="h-full overflow-y-auto scroll-hidden pb-12">
+                <div
+                  ref={pageRef}
+                  className="h-full overflow-y-auto scroll-hidden pb-12"
+                >
                   <Page
                     page={page}
                     maxPage={maxPage}
@@ -37,15 +47,14 @@ const App = () => {
                 </div>
               </main>
 
-              {
-                page !== 10 &&
+              {page !== 10 && (
                 <Footer
                   page={page}
                   maxPage={maxPage}
                   totalPage={totalPage}
                   updatePage={(number) => setPage(number)}
                 />
-              }
+              )}
             </div>
           }
         />

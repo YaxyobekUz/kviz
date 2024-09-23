@@ -1,4 +1,4 @@
-const countriesName = ["Казахстан", "Киргизия", "Узбекистан", "Россия"];
+export const countriesName = ["Казахстан", "Киргизия", "Узбекистан", "Россия"];
 
 // gender & country
 export const page1 = {

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // data
-import { page1, page2 } from "./data";
+import { countriesName, page1, page2 } from "./data";
 
 // slider
 import { Slider } from "@mui/material";
@@ -33,7 +33,7 @@ const initialState = {
   country: null,
   character: [],
   loader: false,
-  age2: [18, 65],
+  age2: [18, 30],
   education: null,
   migration: null,
   telegram: null,
@@ -41,7 +41,7 @@ const initialState = {
   maritalStatus: null,
   extraCharacter: null,
   childrenSCount: null,
-  telephoneNumber: "+",
+  telephoneNumber: null,
   aboutTheFutureWife: null,
 };
 
@@ -102,7 +102,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
     setTimeout(() => {
       updatePage(pageNum);
     }, 300);
-  }
+  };
 
   // --- Update max pages ---
   useEffect(() => {
@@ -197,7 +197,11 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
         ((isMale && soqol) || (!isMale && hijab))
       ) {
         maxPage = 5;
-      } else if (((isMale && soqol) || (!isMale && hijab)) && nation && prayer) {
+      } else if (
+        ((isMale && soqol) || (!isMale && hijab)) &&
+        nation &&
+        prayer
+      ) {
         maxPage = 4;
       } else if (region) {
         maxPage = 3;
@@ -211,23 +215,34 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
     updateMaxPage(maxPage);
   }, [formState, updateMaxPage]);
 
-
   // auto scroll
   useEffect(() => {
     const current = (number) => page === number;
     if (current(0) && gender && country) {
-      updateCurrentPage(1)
-    } else if (current(1) && region) {
-      updateCurrentPage(2)
-    } else if (current(3) && nation && prayer && ((isMale && soqol) || (!isMale && hijab))) {
-      updateCurrentPage(4)
+      updateCurrentPage(1);
+    } else if (
+      current(1) &&
+      [
+        ...page2.countries[countriesName[0]].regions,
+        ...page2.countries[countriesName[1]].regions,
+        ...page2.countries[countriesName[2]].regions,
+        ...page2.countries[countriesName[3]].regions,
+      ].includes(region)
+    ) {
+      updateCurrentPage(2);
+    } else if (
+      current(3) &&
+      nation &&
+      prayer &&
+      ((isMale && soqol) || (!isMale && hijab))
+    ) {
+      updateCurrentPage(4);
     } else if (current(4) && quran && sect && maritalStatus) {
-      updateCurrentPage(5)
+      updateCurrentPage(5);
     } else if (current(5) && childrenSCount && migration) {
-      updateCurrentPage(6)
+      updateCurrentPage(6);
     }
-  }, [formState])
-
+  }, [formState]);
 
   // --- Swiper ---
   useEffect(() => {
@@ -240,11 +255,11 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
     }
   }, []);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-
+  
     if (
-      true ||
+      true || 
       (sect &&
         name &&
         quran &&
@@ -264,64 +279,92 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
     ) {
       // add loader
       handleUpdateState("loader", true);
-
+  
       // helpers
       const token = "7096252874:AAFwuN5TLWTOvyGXdE6gKQ_KRkBKDnnCOjA";
       const baseUrl = "https://api.telegram.org/bot" + token + "/";
-      const url = `${baseUrl}sendMessage`;
       const chatId = "-1002297889113";
-
+  
       // message
       const message = `
-*Пол:* ${gender}
-*Национальность:* ${nation}
-*Читаете ли Вы намаз?* ${prayer}
-*${soqol ? "Носите ли вы бороду?" : "Носите ли вы хиджаб?"}:* ${soqol ? soqol : hijab}
-*Умеете ли вы читать К'уран?* ${quran}
-*Мазхаб:* ${sect}
-
-*Имя:* ${name}
-*Возраст:* ${age}
-*Страна:* ${country}
-*Город:* ${region}
-*Семейное положение:* ${maritalStatus}
-*Количество детей:* ${childrenSCount}
-*Готовы ли вы к переезду?* ${migration}
-*Возраст будущего мужа/жены:* от ${age2[0]} до ${age2[1]}
-*Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
-
-*Рост:* ${height} sm
-*Вес:* ${weight} kg
-*Образование:* ${education}
-*О себе:* ${about}
-*О будущей ${isMale ? "жене" : "муже"}:* ${aboutTheFutureWife}
-
-*Номер в WhatsApp:* ${telephoneNumber}
-*Ссылка на Instagram:* ${instagram ? instagram : "Нет"}
-*Ссылка на Telegram:* ${telegram ? telegram : "Нет"}
-`;
-
-      // form data
-      const formData = {
-        text: message,
-        chat_id: chatId,
-        parse_mode: "Markdown",
-        disable_web_page_preview: true,
-      };
-
-      // send a request
-      axios
-        .post(url, formData)
-        .then(() => navigate("/success"))
-        .catch(() => alert("Произошла неизвестная ошибка!"))
-        .finally(() => handleUpdateState("loader", false));
+  *Пол:* ${gender}
+  *Национальность:* ${nation}
+  *Читаете ли Вы намаз?* ${prayer}
+  *${soqol ? "Носите ли вы бороду?" : "Носите ли вы хиджаб?"}:* ${soqol ? soqol : hijab}
+  *Умеете ли вы читать К'уран?* ${quran}
+  *Мазхаб:* ${sect}
+  
+  *Имя:* ${name}
+  *Возраст:* ${age}
+  *Страна:* ${country}
+  *Город:* ${region}
+  *Семейное положение:* ${maritalStatus}
+  *Количество детей:* ${childrenSCount}
+  *Готовы ли вы к переезду?* ${migration}
+  *Возраст будущего ${isMale ? "мужа" : "жены"}:* от ${age2[0]} до ${age2[1]}
+  *Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
+  
+  *Рост:* ${height} см
+  *Вес:* ${weight} кг
+  *Образование:* ${education}
+  *О себе:* ${about}
+  *О будущей ${isMale ? "жене" : "муже"}:* ${aboutTheFutureWife}
+  
+  *Номер в WhatsApp:* ${"https://wa.me/" + telephoneNumber}
+  *Ссылка на Instagram:* ${instagram ? "https://instagram.com/" + instagram : "Нет"}
+  *Ссылка на Telegram:* ${telegram ? "@" + telegram : "Нет"}
+  `;
+  
+      if (file) {
+        // If a file is selected, send the photo
+        const photoUrl = `${baseUrl}sendPhoto`;
+  
+        // Create FormData
+        const formData = new FormData();
+        formData.append("chat_id", chatId);
+        formData.append("caption", message);  // Add message as caption
+        formData.append("parse_mode", "Markdown");
+        formData.append("photo", file);  // Attach the selected file
+  
+        // Send request with photo
+        try {
+          await axios.post(photoUrl, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          navigate("/success");
+        } catch (error) {
+          alert("Произошла ошибка при отправке фотографии!");
+        } finally {
+          handleUpdateState("loader", false);
+        }
+      } else {
+        // If no file, send only the message
+        const messageUrl = `${baseUrl}sendMessage`;
+        const messageData = {
+          text: message,
+          chat_id: chatId,
+          parse_mode: "Markdown",
+          disable_web_page_preview: true,
+        };
+  
+        // Send request without photo
+        try {
+          await axios.post(messageUrl, messageData);
+          navigate("/success");
+        } catch (error) {
+          alert("Произошла ошибка при отправке сообщения!");
+        } finally {
+          handleUpdateState("loader", false);
+        }
+      }
     }
   };
+  
 
   return (
     <>
-      <h2>{hijab}</h2>
-
       {/* section 0 */}
       {currentSection(0) && (
         <AnimationPage>
@@ -392,18 +435,30 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mb-5">
             {page2.countries[country]
               ? page2.countries[country].regions.map((regionData, index) => (
-                <Option
-                  key={index}
-                  name="region"
-                  text={regionData}
-                  value={regionData}
-                  isActive={regionData === region}
-                  onChange={(value) =>
-                    handleUpdateState("region", regionData)
-                  }
-                />
-              ))
+                  <Option
+                    key={index}
+                    name="region"
+                    text={regionData}
+                    value={regionData}
+                    isActive={regionData === region}
+                    onChange={(value) =>
+                      handleUpdateState("region", regionData)
+                    }
+                  />
+                ))
               : "Something went wrong :("}
+            <Option
+              inputField
+              value={region}
+              text="Свой вариант"
+              onChange={(value) => handleUpdateState("region", value)}
+              isActive={checkInputFieldOption(region, [
+                ...page2.countries[countriesName[0]].regions,
+                ...page2.countries[countriesName[1]].regions,
+                ...page2.countries[countriesName[2]].regions,
+                ...page2.countries[countriesName[3]].regions,
+              ])}
+            />
           </div>
         </AnimationPage>
       )}
@@ -442,9 +497,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 3 */}
       {currentSection(3) && (
         <AnimationPage>
-          {/* section title */}
-          <h2>*</h2>
-
           {/* section content */}
           <div className="space-y-8">
             {/* --- Nation --- */}
@@ -453,30 +505,30 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
             {/* section item content */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mb-5">
               <Option
-                text="Казах"
-                value="Казах"
-                isActive={nation === "Казах"}
+                text={isMale ? "Казах" : "Казашка"}
+                value={isMale ? "Казах" : "Казашка"}
+                isActive={nation === (isMale ? "Казах" : "Казашка")}
                 onChange={(value) => handleUpdateState("nation", value)}
               />
 
               <Option
-                text="Киргиз"
-                value="Киргиз"
-                isActive={nation === "Киргиз"}
+                text={isMale ? "Киргиз" : "Киргизка"}
+                value={isMale ? "Киргиз" : "Киргизка"}
+                isActive={nation === (isMale ? "Киргиз" : "Киргизка")}
                 onChange={(value) => handleUpdateState("nation", value)}
               />
 
               <Option
-                text="Узбек"
-                value="Узбек"
-                isActive={nation === "Узбек"}
+                text={isMale ? "Узбек" : "Узбечка"}
+                value={isMale ? "Узбек" : "Узбечка"}
+                isActive={nation === (isMale ? "Узбек" : "Узбечка")}
                 onChange={(value) => handleUpdateState("nation", value)}
               />
 
               <Option
-                text="Русский"
-                value="Русский"
-                isActive={nation === "Русский"}
+                text={isMale ? "Русский" : "Русская"}
+                value={isMale ? "Русский" : "Русская"}
+                isActive={nation === (isMale ? "Русский" : "Русская")}
                 onChange={(value) => handleUpdateState("nation", value)}
               />
 
@@ -484,13 +536,17 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               <Option
                 inputField
                 value={nation}
-                text="Другое..."
+                text="Свой вариант"
                 onChange={(value) => handleUpdateState("nation", value)}
                 isActive={checkInputFieldOption(nation, [
                   "Казах",
-                  "Киргиз",
                   "Узбек",
+                  "Киргиз",
                   "Русский",
+                  "Казашка",
+                  "Узбечка",
+                  "Русская",
+                  "Киргизка",
                 ])}
               />
             </div>
@@ -517,9 +573,9 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               <Option
                 inputField
                 value={prayer}
-                text="Другое..."
+                text="Свой вариант"
                 onChange={(value) => handleUpdateState("prayer", value)}
-                isActive={checkInputFieldOption(prayer, ["Да", "Нет",])}
+                isActive={checkInputFieldOption(prayer, ["Да", "Нет"])}
               />
             </div>
 
@@ -547,9 +603,9 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
                 <Option
                   inputField
                   value={soqol}
-                  text="Другое..."
+                  text="Свой вариант"
                   onChange={(value) => handleUpdateState("soqol", value)}
-                  isActive={checkInputFieldOption(soqol, ["Да", "Нет",])}
+                  isActive={checkInputFieldOption(soqol, ["Да", "Нет"])}
                 />
               </div>
             ) : (
@@ -572,9 +628,9 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
                 <Option
                   inputField
                   value={hijab}
-                  text="Другое..."
+                  text="Свой вариант"
                   onChange={(value) => handleUpdateState("hijab", value)}
-                  isActive={checkInputFieldOption(hijab, ["Да", "Нет",])}
+                  isActive={checkInputFieldOption(hijab, ["Да", "Нет"])}
                 />
               </div>
             )}
@@ -585,9 +641,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 4 */}
       {currentSection(4) && (
         <AnimationPage>
-          {/* section title */}
-          <h2>**</h2>
-
           {/* section content */}
           <div className="space-y-8">
             {/* --- Quran --- */}
@@ -613,7 +666,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               <Option
                 inputField
                 value={quran}
-                text="Другое..."
+                text="Свой вариант"
                 isActive={checkInputFieldOption(quran, ["Да", "Нет"])}
                 onChange={(value) => handleUpdateState("quran", value)}
               />
@@ -635,7 +688,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               <Option
                 inputField
                 value={sect}
-                text="Другое..."
+                text="Свой вариант"
                 onChange={(value) => handleUpdateState("sect", value)}
                 isActive={checkInputFieldOption(sect, ["Абу Ханифа"])}
               />
@@ -720,7 +773,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               {/* other */}
               <Option
                 inputField
-                text="Другое..."
+                text="Свой вариант"
                 value={maritalStatus}
                 onChange={(value) => {
                   handleUpdateState("maritalStatus", value);
@@ -750,9 +803,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 5 */}
       {currentSection(5) && (
         <AnimationPage>
-          {/* section title */}
-          <h2>***</h2>
-
           {/* section content */}
           <div className="space-y-8">
             {/* --- Children's count --- */}
@@ -809,7 +859,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               {/* other */}
               <Option
                 inputField
-                text="Другое..."
+                text="Свой вариант"
                 value={childrenSCount}
                 onChange={(value) => handleUpdateState("childrenSCount", value)}
                 isActive={checkInputFieldOption(childrenSCount, [
@@ -847,7 +897,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               {/* other */}
               <Option
                 inputField
-                text="Другое..."
+                text="Свой вариант"
                 value={migration}
                 isActive={checkInputFieldOption(migration, ["Да", "Нет"])}
                 onChange={(value) => handleUpdateState("migration", value)}
@@ -860,9 +910,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 6 */}
       {currentSection(6) && (
         <AnimationPage>
-          {/* section title */}
-          <h2>****</h2>
-
           {/* section content */}
           <div className="space-y-8">
             {/* --- Slider (age 2) --- */}
@@ -872,23 +919,23 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 
             <div className="space-y-3">
               {/* result inputs wrapper */}
-              <div className="flex flex-col gap-3.5 sm:items-center sm:flex-row">
+              <div className="flex gap-3.5 items-center">
                 <input
                   disabled
                   type="text"
                   maxLength={2}
                   value={age2[0]}
-                  className="w-44 bg-white !text-lg font-normal border h-12 rounded-lg px-5 outline-none border-secondary/30 focus:border-primary"
+                  className="w-full sm:w-44 bg-white !text-lg font-normal border h-12 rounded-lg px-5 outline-none border-secondary/30 focus:border-primary"
                 />
 
-                <span className="inline-block w-3.5 h-0.5 bg-secondary/20 rounded-full"></span>
+                <span className="hidden sm:inline-block w-3.5 h-0.5 bg-secondary/20 rounded-full"></span>
 
                 <input
                   disabled
                   type="text"
                   value={age2[1]}
                   maxLength={2}
-                  className="w-44 bg-white !text-lg font-normal border h-12 rounded-lg px-5 outline-none border-secondary/30 focus:border-primary"
+                  className="w-full sm:w-44 bg-white !text-lg font-normal border h-12 rounded-lg px-5 outline-none border-secondary/30 focus:border-primary"
                 />
               </div>
 
@@ -949,7 +996,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               <Option
                 inputField
                 type="checkbox"
-                text="Другое..."
+                text="Свой вариант"
                 value={character}
                 isActive={extraCharacter?.length >= 1}
                 onChange={(value) => handleUpdateState("extraCharacter", value)}
@@ -962,9 +1009,6 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
       {/* section 7 */}
       {currentSection(7) && (
         <AnimationPage>
-          {/* section title */}
-          <h2>*****</h2>
-
           {/* section content */}
           <div className="space-y-8">
             {/* --- Height --- */}
@@ -990,7 +1034,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
 
                 <div className="flex items-center justify-between px-1">
                   <p className="text-sm opacity-50">150</p>
-                  <p className="text-sm opacity-50">120</p>
+                  <p className="text-sm opacity-50">220</p>
                 </div>
               </div>
             </div>
@@ -1077,7 +1121,7 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
               {/* other */}
               <Option
                 inputField
-                text="Другое..."
+                text="Свой вариант"
                 value={education}
                 onChange={(value) => handleUpdateState("education", value)}
                 isActive={checkInputFieldOption(education, [
@@ -1175,16 +1219,36 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-center">Загрузите ваше фото (это не будет показываться другим пользователям и нужно только для проверки что вы реальный человек)</h3>
+              <h3 className="text-center">
+                Загрузите ваше фото (это не будет показываться другим
+                пользователям и нужно только для проверки что вы реальный
+                человек)
+              </h3>
 
               <label className="flex flex-col items-center justify-center gap-3.5 w-full py-10 bg-transparent border border-secondary/35 border-dashed rounded-lg transition-colors duration-200 hover:border-primary hover:bg-primary/15 cursor-pointer">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.5535 2.49392C12.4114 2.33852 12.2106 2.25 12 2.25C11.7894 2.25 11.5886 2.33852 11.4465 2.49392L7.44648 6.86892C7.16698 7.17462 7.18822 7.64902 7.49392 7.92852C7.79963 8.20802 8.27402 8.18678 8.55352 7.88108L11.25 4.9318V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V4.9318L15.4465 7.88108C15.726 8.18678 16.2004 8.20802 16.5061 7.92852C16.8118 7.64902 16.833 7.17462 16.5535 6.86892L12.5535 2.49392Z" fill="#d34085" />
-                  <path d="M3.75 15C3.75 14.5858 3.41422 14.25 3 14.25C2.58579 14.25 2.25 14.5858 2.25 15V15.0549C2.24998 16.4225 2.24996 17.5248 2.36652 18.3918C2.48754 19.2919 2.74643 20.0497 3.34835 20.6516C3.95027 21.2536 4.70814 21.5125 5.60825 21.6335C6.47522 21.75 7.57754 21.75 8.94513 21.75H15.0549C16.4225 21.75 17.5248 21.75 18.3918 21.6335C19.2919 21.5125 20.0497 21.2536 20.6517 20.6516C21.2536 20.0497 21.5125 19.2919 21.6335 18.3918C21.75 17.5248 21.75 16.4225 21.75 15.0549V15C21.75 14.5858 21.4142 14.25 21 14.25C20.5858 14.25 20.25 14.5858 20.25 15C20.25 16.4354 20.2484 17.4365 20.1469 18.1919C20.0482 18.9257 19.8678 19.3142 19.591 19.591C19.3142 19.8678 18.9257 20.0482 18.1919 20.1469C17.4365 20.2484 16.4354 20.25 15 20.25H9C7.56459 20.25 6.56347 20.2484 5.80812 20.1469C5.07435 20.0482 4.68577 19.8678 4.40901 19.591C4.13225 19.3142 3.9518 18.9257 3.85315 18.1919C3.75159 17.4365 3.75 16.4354 3.75 15Z" fill="#d34085" />
+                <svg
+                  width="36"
+                  height="36"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12.5535 2.49392C12.4114 2.33852 12.2106 2.25 12 2.25C11.7894 2.25 11.5886 2.33852 11.4465 2.49392L7.44648 6.86892C7.16698 7.17462 7.18822 7.64902 7.49392 7.92852C7.79963 8.20802 8.27402 8.18678 8.55352 7.88108L11.25 4.9318V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V4.9318L15.4465 7.88108C15.726 8.18678 16.2004 8.20802 16.5061 7.92852C16.8118 7.64902 16.833 7.17462 16.5535 6.86892L12.5535 2.49392Z"
+                    fill="#d34085"
+                  />
+                  <path
+                    d="M3.75 15C3.75 14.5858 3.41422 14.25 3 14.25C2.58579 14.25 2.25 14.5858 2.25 15V15.0549C2.24998 16.4225 2.24996 17.5248 2.36652 18.3918C2.48754 19.2919 2.74643 20.0497 3.34835 20.6516C3.95027 21.2536 4.70814 21.5125 5.60825 21.6335C6.47522 21.75 7.57754 21.75 8.94513 21.75H15.0549C16.4225 21.75 17.5248 21.75 18.3918 21.6335C19.2919 21.5125 20.0497 21.2536 20.6517 20.6516C21.2536 20.0497 21.5125 19.2919 21.6335 18.3918C21.75 17.5248 21.75 16.4225 21.75 15.0549V15C21.75 14.5858 21.4142 14.25 21 14.25C20.5858 14.25 20.25 14.5858 20.25 15C20.25 16.4354 20.2484 17.4365 20.1469 18.1919C20.0482 18.9257 19.8678 19.3142 19.591 19.591C19.3142 19.8678 18.9257 20.0482 18.1919 20.1469C17.4365 20.2484 16.4354 20.25 15 20.25H9C7.56459 20.25 6.56347 20.2484 5.80812 20.1469C5.07435 20.0482 4.68577 19.8678 4.40901 19.591C4.13225 19.3142 3.9518 18.9257 3.85315 18.1919C3.75159 17.4365 3.75 16.4354 3.75 15Z"
+                    fill="#d34085"
+                  />
                 </svg>
 
-                <div className="font-semibold">Нажмите, чтобы загрузить файл</div>
-                <div className="text-sm">Или перетяните его из папки в это поле</div>
+                <div className="font-semibold">
+                  Нажмите, чтобы загрузить файл
+                </div>
+                <div className="text-sm">
+                  Или перетяните его из папки в это поле
+                </div>
 
                 <input
                   type="file"
@@ -1194,18 +1258,15 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
                 />
               </label>
 
-              {
-                file &&
+              {file && (
                 <button
                   onClick={() => handleUpdateState("file", null)}
                   className="px-3.5 py-1 border border-secondary/25 rounded-lg text-sm transition-colors duration-200 hover:bg-primary/15"
                 >
                   {file.name}
                 </button>
-              }
+              )}
             </div>
-
-
           </div>
         </AnimationPage>
       )}
