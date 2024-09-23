@@ -287,32 +287,32 @@ const Page = ({ page = 1, updatePage, updateMaxPage = () => 1, maxPage }) => {
   
       // message
       const message = `
-  *Пол:* ${gender}
-  *Национальность:* ${nation}
-  *Читаете ли Вы намаз?* ${prayer}
-  *${soqol ? "Носите ли вы бороду?" : "Носите ли вы хиджаб?"}:* ${soqol ? soqol : hijab}
-  *Умеете ли вы читать К'уран?* ${quran}
-  *Мазхаб:* ${sect}
-  
-  *Имя:* ${name}
-  *Возраст:* ${age}
-  *Страна:* ${country}
-  *Город:* ${region}
-  *Семейное положение:* ${maritalStatus}
-  *Количество детей:* ${childrenSCount}
-  *Готовы ли вы к переезду?* ${migration}
-  *Возраст будущего ${isMale ? "жены" : "мужа"}:* от ${age2[0]} до ${age2[1]}
-  *Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
-  
-  *Рост:* ${height} см
-  *Вес:* ${weight} кг
-  *Образование:* ${education}
-  *О себе:* ${about}
-  *О будущей ${isMale ? "жене" : "муже"}:* ${aboutTheFutureWife}
-  
-  *Номер в WhatsApp:* ${"https://wa.me/" + telephoneNumber}
-  *Ссылка на Instagram:* ${instagram ? "https://instagram.com/" + instagram : "Нет"}
-  *Ссылка на Telegram:* ${telegram ? "@" + telegram : "Нет"}
+*Пол:* ${gender}
+*Национальность:* ${nation}
+*Читаете ли Вы намаз?* ${prayer}
+*${soqol ? "Носите ли вы бороду?" : "Носите ли вы хиджаб?"}:* ${soqol ? soqol : hijab}
+*Умеете ли вы читать К'уран?* ${quran}
+*Мазхаб:* ${sect}
+
+*Имя:* ${name}
+*Возраст:* ${age}
+*Страна:* ${country}
+*Город:* ${region}
+*Семейное положение:* ${maritalStatus}
+*Количество детей:* ${childrenSCount}
+*Готовы ли вы к переезду?* ${migration}
+*Возраст будущего ${isMale ? "жены" : "мужа"}:* от ${age2[0]} до ${age2[1]}
+*Характер:*${character?.length > 0 && character.map((char) => " " + char)} ${extraCharacter ? extraCharacter : ""}
+
+*Рост:* ${height} см
+*Вес:* ${weight} кг
+*Образование:* ${education}
+*О себе:* ${about}
+*О будущей ${isMale ? "жене" : "муже"}:* ${aboutTheFutureWife}
+
+*Номер в WhatsApp:* ${"https://wa.me/" + telephoneNumber}
+*Ссылка на Instagram:* ${instagram ? "https://instagram.com/" + instagram : "Нет"}
+*Ссылка на Telegram:* ${telegram ? "@" + telegram : "Нет"}
   `;
   
       if (file) {
